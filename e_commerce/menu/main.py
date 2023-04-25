@@ -1,7 +1,7 @@
 from typing import Any
 
-import sys
-sys.path.append('/home/gabriel/Programs/SWE/groupProject/e_commerce')
+import os
+os.chdir('./e_commerce')
 
 import classes.users as users
 import create_account.create as create

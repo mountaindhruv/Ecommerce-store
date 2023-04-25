@@ -1,5 +1,6 @@
-import sys
-sys.path.append('/home/gabriel/Programs/SWE/groupProject/e_commerce')
+import os
+os.chdir('./e_commerce')
+
 
 import database.db_functions.select as select
 import database.db_functions.insert as insert
