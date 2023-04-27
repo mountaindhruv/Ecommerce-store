@@ -1,9 +1,6 @@
-from typing import Any
+import sys
+sys.path.append('/home/gabriel/Programs/SWE/Ecommerce-store/e_commerce')
 
-import os
-os.chdir('./e_commerce')
-
-import classes.users as users
 import create_account.create as create
 import login.user_login as user_login
 
