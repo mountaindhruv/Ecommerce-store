@@ -1,8 +1,5 @@
 import sqlite3
 import sys
-# sys.path.append('/home/gabriel/Programs/SWE/groupProject/e_commerce/')
-# import create_account.create as edit
-
 
 ## attempts to connect to the database
 def selector(command):

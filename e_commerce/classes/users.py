@@ -1,5 +1,5 @@
-import os
-os.chdir('./e_commerce')
+import sys
+sys.path.append('/home/gabriel/Programs/SWE/Ecommerce-store/e_commerce')
 
 import database.db_functions.select as select
 import database.db_functions.delete as delete

@@ -1,6 +1,5 @@
-import os
-os.chdir('./e_commerce')
-
+import sys
+sys.path.append('/home/gabriel/Programs/SWE/Ecommerce-store/e_commerce')
 
 import database.db_functions.select as select
 import database.db_functions.insert as insert
@@ -164,8 +163,6 @@ def create_account():
         except:
             print("Incorrect type: Enter Zip Code digits\n")
             pass
-
-    #TODO: store data in database
     
     ## insert into Users table
     user_query = "INSERT INTO Users (First_Name, Last_Name, Username, Password, User_ID) VALUES ('%s','%s','%s','%s','%s')"\
@@ -187,9 +184,7 @@ def create_account():
     print("\nSuccessfully created account")
 
     ### Proceed to login page
-    print("About to open login page\n\n")
+    print("Proceeding to login page\n")
 
     current_user = users.User(first_name,last_name,username,password,userid)
-    user_login.login_page(current_user)
-
-
+    user_login.login_page(current_user, userid)

@@ -1,21 +1,24 @@
-import os
-os.chdir('./e_commerce')
+import sys
+sys.path.append('/home/gabriel/Programs/SWE/Ecommerce-store/e_commerce')
 
 import database.db_functions.select as select
 import classes.users as user
+import login.user_history as user_history
 import menu.main as main
 
 def login():
     while (1):
-        print("Enter username")
+        print("Enter username or enter 'BACK' to go back")
         user_name = input()
+
+        if user_name == "BACK": break
             
         # check username from User table
         #usr_cmd = "SELECT username,password FROM Users WHERE Username = '%s'" %user_name
         usr_cmd= "SELECT username,password,first_name,last_name, user_id FROM Users WHERE Username = '%s'" %user_name
         user_details = select.selector(usr_cmd)
         if not user_details:
-            print("Incorrect Username\tTry again")
+            print("Incorrect Username\tTry again\n")
             continue
         Corrent_password = user_details[0][1] #string edit to get actual username for comparison
 
@@ -36,11 +39,11 @@ def login():
 
 
         # PROCEED to login page if password and email successfully matches
-        login_page(current_user)
+        login_page(current_user, user_id)
 
 
     ### SUCCESSFUL LOGIN PAGE
-def login_page(current_user):
+def login_page(current_user, userid):
     while(1):    
         print("\n1. Edit user settings\
             \n2. Shop\
@@ -112,8 +115,21 @@ def login_page(current_user):
             #     shop()
             # elif option == 3:
             #     cart_information()
-            # elif option == 4:
-            #     user_history()
+        elif option == 4:
+            while(1):
+                print("\n1. View User history\n2. Go back")
+                try:
+                    usr_choice = int(input())
+                except:
+                    print("Incorrect input type:  Enter option '1' or '2'")
+                    continue
+                if usr_choice == 1: 
+                    user_history.view_user_history(userid)
+                    continue
+                elif usr_choice == 2:
+                    break
+                else: print("Incorrect option")
+
 
         elif option == 5:
             print("logging out\n")

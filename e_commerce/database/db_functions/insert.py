@@ -21,4 +21,3 @@ def insert_data(query):
 
     cursor.close()
     connection.close()
-
