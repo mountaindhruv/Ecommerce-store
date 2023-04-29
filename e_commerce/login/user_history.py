@@ -2,6 +2,10 @@ import sys
 sys.path.append('/home/gabriel/Programs/SWE/Ecommerce-store/e_commerce')
 
 import database.db_functions.select as select
+import database.db_functions.insert as insert
+import database.db_functions.delete as delete
+import database.db_functions.update as update
+
 
 
 def view_user_history(user_id):
@@ -12,3 +16,24 @@ def view_user_history(user_id):
     #print out user history to user
     for data in history_result:
         print(output_format %(data[0],data[1],data[2],data[3],data[4],data[6],data[7]))
+
+
+def add_to_user_history():
+    #select everything grom the cart
+    data = select.selector("SELECT * FROM Cart") 
+
+    for x in data:
+        #check if item alreaady exits in user history
+        ISBN = x[0]
+        tmp = select.selector("SELECT Quantity FROM User_History WHERE ISBN=%s" %ISBN)
+
+        # if item already exits in user history, increment the item quantity
+        if tmp:
+            query = "UPDATE User_History SET Quantity=%s WHERE ISBN=%s" %(x[6]+tmp, ISBN)
+            update.update_data(query)
+        else:
+            #insert it into user history cart
+            query = "INSERT INTO User_History (ISBN, Title, Author, Year, Genre, User_ID, Quantity, Price) \
+                VALUES (%s,'%s','%s',%s,'%s',%s,%s,%s)" \
+                %(x[0],x[1],x[2],x[3],x[4],x[5],x[6],x[7])
+            insert.insert_data(query)
