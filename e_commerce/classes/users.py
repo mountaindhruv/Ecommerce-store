@@ -1,10 +1,10 @@
 import sys
 sys.path.append('/home/gabriel/Programs/SWE/Ecommerce-store/e_commerce')
 
-import database.db_functions.select as select
 import database.db_functions.delete as delete
-
-#TODO:UPDATE queries not responding fix it later
+import database.db_functions.update as update
+import database.db_functions.select as select
+import menu.main as main
 
 
 class User():
@@ -18,7 +18,7 @@ class User():
     
 
     #edit payment info method
-    def edit_payment_info(self):
+    def edit_payment_info(self, id):
         #Aunthenticate by requesting for password
         while (1):
             print("Enter password")
@@ -75,15 +75,16 @@ class User():
             except:
                 print("Incorrect type: Enter phone number digits\n")
                 pass    
+
         #update payment info in thesystem
         payment_query = "UPDATE Payment_Info SET Payment_Type='%s',Card_Number='%s',CVV = '%s',Address_Line_1='%s',\
-        Address_Line_2='%s',City='%s',State='%s',Zip_Code='%s',Phone_Number='%s' WHERE User_ID ='%s'"\
-            %(payment_type, card_number,cvv,address_line_1,address_line_2,city,state,zipcode,phonenumber,self.user_id)
-        select.selector(payment_query)
+        Address_Line_2='%s',City='%s',State='%s',Zip_Code='%s',Phone_Number='%s' WHERE User_ID =%s"\
+            %(payment_type, card_number,cvv,address_line_1,address_line_2,city,state,zipcode,phonenumber,id)
+        update.update_data(payment_query)
     
     
     #Edit shipping info method
-    def edit_shipping_info(self):
+    def edit_shipping_info(self, id):
         #Aunthenticate by requesting for password
         while (1):
             print("Enter password to proceed")
@@ -118,17 +119,17 @@ class User():
                 shipping_phone = int(input())
                 break
             except:
-                print("Incorrect type: Enter Zip Code digits\n")
-                pass  
+                print("Incorrect type: Enter phone number digits\n")
+
         #Update shipping info in system
-        shipping_query = "UPDATE Shipping_Info SET Address_Line_1='%s',Address_Line_2='%s',City='%s',State='%s' \
-            Zip_Code='%s',Phone_Number='%s' WHERE User_ID ='%s'"\
-            %(address_1, address_2,shipping_city,shipping_state,shipping_zipcode,shipping_phone,self.user_id)
-        select.selector(shipping_query)
+        shipping_query = "UPDATE Shipping_Info SET Address_Line_1='%s',Address_Line_2='%s',City='%s',State='%s', \
+            Zip_Code='%s',Phone_Number='%s' WHERE User_ID =%s"\
+            %(address_1, address_2,shipping_city,shipping_state,shipping_zipcode,shipping_phone,id)
+        update.update_data(shipping_query)
 
 
     #Edit username method
-    def edit_username(self):
+    def edit_username(self, id):
         #Aunthenticate by requesting for password
         while (1):
             print("Enter password to proceed")
@@ -147,13 +148,13 @@ class User():
             break
         #update username in the system
         self.user_name = new_username
-        username_query = "UPDATE Users SET Username='%s' WHERE User_ID='%s'" %(new_username,self.user_id)
-        select.selector(username_query)
+        username_query = "UPDATE Users SET Username='%s' WHERE User_ID=%s" %(new_username,id)
+        update.update_data(username_query)
         
 
 
     #Edit Password Method
-    def edit_password(self):
+    def edit_password(self, id):
         #Aunthenticate by requesting for password
         while (1):
             print("Enter old password to proceed")
@@ -172,29 +173,42 @@ class User():
             break
         #update password in the system
         self.password = new_password
-        password_query = "UPDATE Users SET Password='%s' WHERE User_ID='%s'" %(new_password,self.user_id)
-        select.selector(password_query)
+        password_query = "UPDATE Users SET Password='%s' WHERE User_ID=%s" %(new_password,id)
+        update.update_data(password_query)
     
 
     #Delete User Account Method
     def delete_user_account(self):
         while (1):
-            print("Enter password to proceed")
-            user_psd = input()
-            if user_psd != self.password:
-                print("Incorrect password\t Try again")
-                continue
-            break 
+            print("Are you sure? (Y/n)")
+            choice = input()
+            if choice == 'Y':
+                print("Enter password to proceed")
+                user_psd = input()
+                actual_psd = select.selector("SELECT Password FROM Users where User_ID=%s" %self.user_id)
 
-        #delete queries
-        delete_user_query = "DELETE FROM Users WHERE User_ID='%s'" %self.user_id
-        delete_payment_query = "DELETE FROM Payment_Info WHERE User_ID='%s'" %self.user_id
-        delete_shipping_query = "DELETE FROM Shipping_Info WHERE User_ID='%s'" %self.user_id
+                if user_psd == actual_psd[0][0]:
 
-        #delete command execute
-        delete.delete_data(delete_user_query)
-        delete.delete_data(delete_payment_query)
-        delete.delete_data(delete_shipping_query)
+                    #delete queries
+                    delete_user_query = "DELETE FROM Users WHERE User_ID=%s" %self.user_id
+                    delete_payment_query = "DELETE FROM Payment_Info WHERE User_ID=%s" %self.user_id
+                    delete_shipping_query = "DELETE FROM Shipping_Info WHERE User_ID=%s" %self.user_id
+                    delete_histroy_query = "DELETE FROM User_History WHERE User_ID=%s" %self.user_id
+                    delete_cart_history = "DELETE FROM Cart WHERE USER_ID=%s" %self.user_id
 
-        #TODO: after cart class is completed
-        #delete_cart_query = "DELETE FROM Users WHERE User_ID='%s'" %self.user_id
+                    #delete command execute
+                    delete.delete_data(delete_user_query)
+                    delete.delete_data(delete_payment_query)
+                    delete.delete_data(delete_shipping_query)
+                    delete.delete_data(delete_histroy_query)
+                    delete.delete_data(delete_cart_history)
+
+                    return True
+
+                else:
+                    print("Incorrect password\t Try again")
+                    continue
+            elif choice == 'n': 
+                return False
+            else:
+                print("Incorrect option: Try again")

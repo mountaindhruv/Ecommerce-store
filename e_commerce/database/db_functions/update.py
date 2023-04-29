@@ -1,8 +1,9 @@
 import sqlite3
 import sys
 
-## attempts to connect to the database
-def delete_data(query):
+
+def update_data(query):
+    ## attempts to connect to the database
     try:
         connection = sqlite3.connect("sqlite.db")
 
@@ -14,9 +15,9 @@ def delete_data(query):
 
     ## cursor to send queries through
     cursor = connection.cursor()
+    cursor.execute(query) # update data in the table
+    connection.commit() # commit changes
 
-    cursor.execute(query)
-    connection.commit()
 
     cursor.close()
     connection.close()

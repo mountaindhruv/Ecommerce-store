@@ -19,7 +19,7 @@ def main_func():
             create.create_account()
         elif choice == 3:
             print("\nExiting...Good bye!\n")
-            break
+            sys.exit()
         else:
             print("Incorrect option: Try again")
         

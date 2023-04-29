@@ -18,6 +18,5 @@ def insert_data(query):
     cursor.execute(query) # insert into table
     connection.commit() # commit changes
 
-
     cursor.close()
     connection.close()
